@@ -16,9 +16,9 @@ const Dashboard: React.FC = () => {
     // We can memorize trends/best times as they don't change as frantically as live metrics
     // But for "simulation" effect we can refresh them occasionally.
     const [trends, setTrends] = useState<Record<Platform, Trend[]>>({
-        instagram: SocialPredictor.getTrends('instagram'),
-        tiktok: SocialPredictor.getTrends('tiktok'),
-        spotify: SocialPredictor.getTrends('spotify')
+        instagram: [],
+        tiktok: [],
+        spotify: []
     });
 
     const [bestTimes, setBestTimes] = useState<Record<Platform, Prediction[]>>({
@@ -35,8 +35,23 @@ const Dashboard: React.FC = () => {
     });
 
     useEffect(() => {
+        // Initial Fetch of Real Trends (Async)
+        const fetchTrends = async () => {
+            const igTrends = await SocialPredictor.getRealTrends('instagram');
+            const tkTrends = await SocialPredictor.getRealTrends('tiktok');
+            const spTrends = await SocialPredictor.getRealTrends('spotify');
+
+            setTrends({
+                instagram: igTrends,
+                tiktok: tkTrends,
+                spotify: spTrends
+            });
+        };
+        fetchTrends();
+
         // Live fluctuation effect
         const interval = setInterval(() => {
+            // ... (keep usage metrics sync)
             setMetrics({
                 instagram: SocialPredictor.getLiveMetrics('instagram'),
                 tiktok: SocialPredictor.getLiveMetrics('tiktok'),
@@ -48,11 +63,15 @@ const Dashboard: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const handleManualRefresh = () => {
+    const handleManualRefresh = async () => {
+        const igTrends = await SocialPredictor.getRealTrends('instagram');
+        const tkTrends = await SocialPredictor.getRealTrends('tiktok');
+        const spTrends = await SocialPredictor.getRealTrends('spotify');
+
         setTrends({
-            instagram: SocialPredictor.getTrends('instagram'),
-            tiktok: SocialPredictor.getTrends('tiktok'),
-            spotify: SocialPredictor.getTrends('spotify')
+            instagram: igTrends,
+            tiktok: tkTrends,
+            spotify: spTrends
         });
         setBestTimes({
             instagram: SocialPredictor.getBestTimes('instagram'),
