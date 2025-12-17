@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
                 spotify: SocialPredictor.getLiveMetrics('spotify')
             });
             setLastUpdated(new Date());
-        }, 3000); // Update every 3 seconds
+        }, 2500); // Update every 2.5 seconds
 
         return () => clearInterval(interval);
     }, []);
