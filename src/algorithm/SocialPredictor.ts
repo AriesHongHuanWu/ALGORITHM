@@ -37,22 +37,22 @@ export interface ActivityPoint {
 
 const MOCK_TRENDS: Record<Platform, Trend[]> = {
     instagram: [
-        { id: '1', name: 'Golden Hour Aesthetic', category: 'theme', growth: 125, volume: '2.4M' },
-        { id: '2', name: '#DailyVlog', category: 'hashtag', growth: 85, volume: '15M' },
-        { id: '3', name: 'Lo-Fi Chill', category: 'music', growth: 45, volume: '850K' },
-        { id: '4', name: 'Reel Transitions', category: 'theme', growth: 200, volume: '5M' },
+        { id: '1', name: 'Nostalgia Core (Vintage)', category: 'theme', growth: 145, volume: 'High' },
+        { id: '2', name: '#NoEditEdit (Authentic)', category: 'hashtag', growth: 88, volume: 'Trending' },
+        { id: '3', name: 'Maximalism Visuals', category: 'theme', growth: 62, volume: 'Rising' },
+        { id: '4', name: 'Day-in-the-Life Reels', category: 'theme', growth: 210, volume: 'Viral' },
     ],
     tiktok: [
-        { id: '1', name: 'Speed Up Songs', category: 'music', growth: 350, volume: '12M' },
-        { id: '2', name: '#CoreCore', category: 'hashtag', growth: 180, volume: '80M' },
-        { id: '3', name: 'Dance Challenge 2024', category: 'theme', growth: 500, volume: '3.2M' },
-        { id: '4', name: 'POV', category: 'theme', growth: 90, volume: '100M+' },
+        { id: '1', name: 'All I Want For Christmas', category: 'music', growth: 500, volume: 'Peaking' },
+        { id: '2', name: '#2025Resolutions', category: 'hashtag', growth: 320, volume: 'Exploding' },
+        { id: '3', name: 'Shake It to the Max', category: 'music', growth: 235, volume: 'Viral' },
+        { id: '4', name: '#DecemberVibes', category: 'hashtag', growth: 150, volume: '12.4B views' },
     ],
     spotify: [
-        { id: '1', name: 'Phonk Brazil', category: 'music', growth: 110, volume: '400K Listeners' },
-        { id: '2', name: 'Sad Boi Hours', category: 'theme', growth: 60, volume: '1.2M Saves' },
-        { id: '3', name: 'Gym Motivation', category: 'theme', growth: 95, volume: '5M Streams' },
-        { id: '4', name: 'Indie Pop', category: 'music', growth: 30, volume: '900K Listeners' },
+        { id: '1', name: 'Die With A Smile', category: 'music', growth: 180, volume: '#1 Global' },
+        { id: '2', name: 'BIRDS OF A FEATHER', category: 'music', growth: 95, volume: 'Top 10' },
+        { id: '3', name: 'Espresso (Sabrina)', category: 'music', growth: 120, volume: 'Viral' },
+        { id: '4', name: 'Good Luck, Babe!', category: 'music', growth: 85, volume: 'Trending' },
     ]
 };
 
@@ -112,7 +112,11 @@ export class SocialPredictor {
     }
 
     static getTrends(platform: Platform): Trend[] {
-        return [...MOCK_TRENDS[platform]].sort(() => Math.random() - 0.5);
+        // Randomize order and slightly fluctuate growth numbers to simulate live tracking
+        return MOCK_TRENDS[platform].map(trend => ({
+            ...trend,
+            growth: trend.growth + Math.floor(Math.random() * 10 - 5) // Fluctuate +/- 5%
+        })).sort(() => Math.random() - 0.5);
     }
 
     static getLiveMetrics(platform: Platform): PlatformMetrics {
