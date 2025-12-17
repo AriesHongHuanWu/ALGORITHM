@@ -1,4 +1,3 @@
-
 import { addHours, format, startOfHour } from 'date-fns';
 
 export type Platform = 'instagram' | 'tiktok' | 'spotify';
@@ -21,6 +20,19 @@ export interface PlatformMetrics {
     currentActiveUsers: number;
     engagementRate: number;
     uploadTraffic: 'low' | 'moderate' | 'high' | 'peak';
+    retentionRate: number; // New metric
+    shareRatio: number;    // New metric
+    viralPotential: number; // 0-100 gauge
+}
+
+export interface Demographics {
+    ageGroup: { label: string; percentage: number }[];
+    locations: { label: string; percentage: number }[];
+}
+
+export interface ActivityPoint {
+    time: string;
+    value: number;
 }
 
 const MOCK_TRENDS: Record<Platform, Trend[]> = {
@@ -94,11 +106,29 @@ export class SocialPredictor {
 
         const fluctuation = Math.random() * 0.1 - 0.05; // +/- 5%
         const currentActiveUsers = Math.floor(baseUsers[platform] * (1 + fluctuation));
+        const engagementRate = parseFloat((Math.random() * 5 + 2).toFixed(2));
 
         return {
             currentActiveUsers,
-            engagementRate: parseFloat((Math.random() * 5 + 2).toFixed(2)), // 2-7%
-            uploadTraffic: currentActiveUsers > baseUsers[platform] ? 'peak' : 'moderate'
+            engagementRate, // 2-7%
+            uploadTraffic: currentActiveUsers > baseUsers[platform] ? 'peak' : 'moderate',
+            retentionRate: parseFloat((Math.random() * 30 + 40).toFixed(1)), // 40-70%
+            shareRatio: parseFloat((Math.random() * 2 + 0.5).toFixed(1)), // 0.5 - 2.5
+            viralPotential: Math.floor(engagementRate * 10 + Math.random() * 20)
         };
+    }
+
+    static getActivityHistory(_platform: Platform): ActivityPoint[] {
+        const points: ActivityPoint[] = [];
+        const now = new Date();
+        // Generate data for last 12 hours
+        for (let i = 12; i >= 0; i--) {
+            const time = addHours(now, -i);
+            points.push({
+                time: format(time, 'HH:mm'),
+                value: Math.floor(Math.random() * 1000) + 500 + (Math.random() > 0.8 ? 1000 : 0) // Random spikes
+            });
+        }
+        return points;
     }
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Music, Hash, Zap, BarChart3 } from 'lucide-react';
 import type { Trend, PlatformMetrics, Prediction } from '../algorithm/SocialPredictor';
+import DetailedChart from './DetailedChart';
 
 interface PlatformCardProps {
     platformName: string;
@@ -10,10 +11,11 @@ interface PlatformCardProps {
     metrics: PlatformMetrics;
     trends: Trend[];
     bestTimes: Prediction[];
+    history: { time: string; value: number }[];
     color: string;
 }
 
-const PlatformCard: React.FC<PlatformCardProps> = ({ platformName, icon, metrics, trends, bestTimes, color }) => {
+const PlatformCard: React.FC<PlatformCardProps> = ({ platformName, icon, metrics, trends, bestTimes, history, color }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -56,6 +58,32 @@ const PlatformCard: React.FC<PlatformCardProps> = ({ platformName, icon, metrics
                         <BarChart3 className="w-4 h-4 text-purple-400" />
                     </div>
                 </div>
+            </div>
+
+            {/* New Advanced Metrics Row */}
+            <div className="grid grid-cols-3 gap-2 mb-6 relative z-10">
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
+                    <div className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Retention</div>
+                    <div className="text-lg font-bold text-white">{metrics.retentionRate}%</div>
+                </div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
+                    <div className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Share Ratio</div>
+                    <div className="text-lg font-bold text-white">{metrics.shareRatio}x</div>
+                </div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
+                    <div className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Viral Potential</div>
+                    <div className={`text-lg font-bold ${metrics.viralPotential > 80 ? 'text-red-500 animate-pulse' : 'text-yellow-400'}`}>
+                        {metrics.viralPotential}
+                    </div>
+                </div>
+            </div>
+
+            {/* Activity Chart */}
+            <div className="mb-6 relative z-10 p-4 rounded-xl bg-black/20 border border-white/5">
+                <h4 className="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2">
+                    <BarChart3 className="w-3 h-3" /> 12h Activity Trend
+                </h4>
+                <DetailedChart data={history} color={color} />
             </div>
 
             <div className="mb-6 relative z-10">

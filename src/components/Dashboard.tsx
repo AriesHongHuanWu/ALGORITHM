@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { SocialPredictor } from '../algorithm/SocialPredictor';
-import type { Platform, PlatformMetrics, Trend, Prediction } from '../algorithm/SocialPredictor';
+import type { Platform, PlatformMetrics, Trend, Prediction, ActivityPoint } from '../algorithm/SocialPredictor';
 import { Instagram, Music2, Share2, Activity, Clock, RefreshCw } from 'lucide-react';
 import PlatformCard from './PlatformCard';
 
@@ -25,6 +25,13 @@ const Dashboard: React.FC = () => {
         instagram: SocialPredictor.getBestTimes('instagram'),
         tiktok: SocialPredictor.getBestTimes('tiktok'),
         spotify: SocialPredictor.getBestTimes('spotify')
+    });
+
+    // Initial History Data
+    const [history, setHistory] = useState<Record<Platform, ActivityPoint[]>>({
+        instagram: SocialPredictor.getActivityHistory('instagram'),
+        tiktok: SocialPredictor.getActivityHistory('tiktok'),
+        spotify: SocialPredictor.getActivityHistory('spotify')
     });
 
     useEffect(() => {
@@ -51,6 +58,11 @@ const Dashboard: React.FC = () => {
             instagram: SocialPredictor.getBestTimes('instagram'),
             tiktok: SocialPredictor.getBestTimes('tiktok'),
             spotify: SocialPredictor.getBestTimes('spotify')
+        });
+        setHistory({
+            instagram: SocialPredictor.getActivityHistory('instagram'),
+            tiktok: SocialPredictor.getActivityHistory('tiktok'),
+            spotify: SocialPredictor.getActivityHistory('spotify')
         });
         setLastUpdated(new Date());
     }
@@ -109,6 +121,7 @@ const Dashboard: React.FC = () => {
                         metrics={metrics.instagram}
                         trends={trends.instagram}
                         bestTimes={bestTimes.instagram}
+                        history={history.instagram}
                         color="#E1306C"
                     />
                     <PlatformCard
@@ -117,6 +130,7 @@ const Dashboard: React.FC = () => {
                         metrics={metrics.tiktok}
                         trends={trends.tiktok}
                         bestTimes={bestTimes.tiktok}
+                        history={history.tiktok}
                         color="#00f2ea"
                     />
                     <PlatformCard
@@ -125,6 +139,7 @@ const Dashboard: React.FC = () => {
                         metrics={metrics.spotify}
                         trends={trends.spotify}
                         bestTimes={bestTimes.spotify}
+                        history={history.spotify}
                         color="#1DB954"
                     />
                 </div>
